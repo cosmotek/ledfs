@@ -1,0 +1,14 @@
+hash: 0f08eb12bf110d9f4bfbdcf39e7e3ecde03a2d331feaf3bce36a6fe6814738f8
+updated: 2018-07-19T16:51:33.269153521-04:00
+imports:
+- name: github.com/hanwen/go-fuse
+  version: 5690be47d614355a22931c129e1075c25a62e9ac
+  subpackages:
+  - fuse
+  - fuse/nodefs
+  - splice
+- name: github.com/jgarff/rpi_ws281x
+  version: e4a05d6538c02bb9714f2efc6630f2bfdcf35bf6
+  subpackages:
+  - golang/ws2811
+testImports: []

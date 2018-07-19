@@ -1,0 +1,10 @@
+package: gitlab.com/rucuriousyet/chateau-gateway
+import:
+- package: github.com/hanwen/go-fuse
+  version: ~20170619.0.0
+  subpackages:
+  - fuse
+  - fuse/nodefs
+- package: github.com/jgarff/rpi_ws281x
+  subpackages:
+  - golang/ws2811

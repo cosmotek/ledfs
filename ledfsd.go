@@ -52,7 +52,7 @@ func (fs *LedFs) OpenDir(name string, context *fuse.Context) (c []fuse.DirEntry,
 			attr := fuse.Attr{}
 			file.GetAttr(&attr)
 
-			fileList = append(fileList, fuse.DirEntry{Name: name, Mode: attr.Mode, Ino: attr.Ino})
+			fileList = append(fileList, fuse.DirEntry{Name: name, Mode: attr.Mode})
 		}
 
 		return fileList, fuse.OK
