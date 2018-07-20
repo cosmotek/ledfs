@@ -21,6 +21,10 @@ Raspberry Pi.
 + Root Priviledges
 	We'll leave that up to you and the internet.
 
++ Fuse Libraries
+    This will install libfuse2 and the binaries required for mounting.
+    `sudo apt install fuse`
+
 As long as you have all of the above, compiling your go source like any other
 Go code should work fine. Just make sure to compile and then run the resulting
 binary as root, because the leds require root access to run, and funky errors
