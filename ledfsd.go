@@ -5,11 +5,13 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/hanwen/go-fuse/fuse"
 	"github.com/hanwen/go-fuse/fuse/nodefs"
 	"github.com/hanwen/go-fuse/fuse/pathfs"
+	"github.com/jgarff/rpi_ws281x/golang/ws2811"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
@@ -45,6 +47,30 @@ var DefaultOptions = ColorOptions{
 
 var DefaultColors = ColorSet{
 	Values: []string{},
+}
+
+func colorHex(color string) uint32 {
+	// check for len
+	if len(color) != 6 && (len(color) == 7 && string(color[0]) != "#") {
+		return 0x000000
+	}
+
+	// check for and remove # symbol
+	if string(color[0]) == "#" {
+		color = string(color[1:])
+	}
+
+	rval := string(color[0:2])
+	gval := string(color[2:4])
+	bval := string(color[4:6])
+
+	code, err := strconv.ParseUint(fmt.Sprintf("0x%s%s%s", gval, rval, bval), 0, 32)
+	if err != nil {
+		fmt.Println(err.Error())
+		return 0x000000
+	}
+
+	return uint32(code)
 }
 
 func (fs *LedFs) GetAttr(name string, context *fuse.Context) (*fuse.Attr, fuse.Status) {
@@ -113,6 +139,12 @@ func main() {
 	}
 
 	logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	defer ws2811.Fini()
+
+	err := ws2811.Init(DefaultOptions.GPIOPin, DefaultOptions.NumLEDs, DefaultOptions.Brightness)
+	if err != nil {
+		logger.Fatal().Err(err).Msg("failed to init leds")
+	}
 
 	fs := &LedFs{
 		FileSystem: pathfs.NewDefaultFileSystem(),
@@ -130,6 +162,14 @@ func main() {
 		}
 
 		logger.Debug().Interface("colors", colors).Msg("rendering led colors")
+		for i, color := range colors.Values {
+			ws2811.SetLed(i, colorHex(color))
+		}
+
+		if err := ws2811.Render(); err != nil {
+			ws2811.Clear()
+			logger.Error().Err(err).Msg("failed to render led colors")
+		}
 	})
 
 	fs.Files["options.json"] = file.NewDataFile([]byte(`{ "numLeds": 24, "gpioPin": 18, "brightness": 220, "dmaChannel": 10 }`), func(data []byte) {
@@ -142,6 +182,12 @@ func main() {
 		}
 
 		logger.Debug().Interface("options", options).Msg("resetting led options")
+		ws2811.Fini()
+
+		err := ws2811.Init(options.GPIOPin, options.NumLEDs, options.Brightness)
+		if err != nil {
+			logger.Fatal().Err(err).Msg("failed to init leds")
+		}
 	})
 
 	server, _, err := nodefs.MountRoot(flag.Arg(0), pathfs.NewPathNodeFs(fs, nil).Root(), nil)
