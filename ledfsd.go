@@ -27,7 +27,6 @@ type ColorOptions struct {
 	NumLEDs    uint32 `json:"numLeds"`
 	GPIOPin    byte   `json:"gpioPin"`
 	Brightness byte   `json:"brightness"`
-	DMAChannel byte   `json:"dmaChannel"`
 }
 
 type LedFs struct {
@@ -43,7 +42,6 @@ var DefaultOptions = ColorOptions{
 	NumLEDs:    24,
 	GPIOPin:    18,
 	Brightness: 220,
-	DMAChannel: 10,
 }
 
 var DefaultColors = ColorSet{
@@ -134,6 +132,8 @@ func (fs *LedFs) Create(name string, flags uint32, mode uint32, context *fuse.Co
 }
 
 func main() {
+	debug := flag.Bool("debug", false, "enable debug logging")
+
 	flag.Parse()
 	if len(flag.Args()) < 1 {
 		logger.Fatal().Msg("Usage:\n  hello MOUNTPOINT")
@@ -203,7 +203,7 @@ func main() {
 		}
 	})
 
-	fs.Files["options.json"] = file.NewDataFile([]byte(`{ "numLeds": 24, "gpioPin": 18, "brightness": 220, "dmaChannel": 10 }`), func(data []byte) {
+	fs.Files["options.json"] = file.NewDataFile([]byte(`{ "numLeds": 24, "gpioPin": 18, "brightness": 220 }`), func(data []byte) {
 		options := ColorOptions{}
 		err := json.Unmarshal(data, &options)
 
@@ -230,11 +230,14 @@ func main() {
 		}
 	})
 
-	server, _, err := nodefs.MountRoot(flag.Arg(0), pathfs.NewPathNodeFs(fs, nil).Root(), nil)
+	server, conn, err := nodefs.MountRoot(flag.Arg(0), pathfs.NewPathNodeFs(fs, nil).Root(), nil)
 	if err != nil {
 		logger.Fatal().Msg(fmt.Sprintf("Mount fail: %v\n", err))
 	}
 
-	server.SetDebug(false)
+	// setup later cleanup
+	defer server.Unmount()
+
+	server.SetDebug(*debug)
 	server.Serve()
 }

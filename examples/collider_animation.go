@@ -7,15 +7,17 @@ import (
 )
 
 const NUMLEDS = 24
+const LEDSFILE = "/dev/leds/colors.json"
+const TICKMILLIS = 25
 
 type ColorSet struct {
 	Values []string `json:"values"`
 }
 
 func main() {
-	ticker := time.NewTicker(time.Millisecond * 25)
+	ticker := time.NewTicker(time.Millisecond * TICKMILLIS)
 	inx := 0
-	inx2 := 23
+	inx2 := NUMLEDS - 1
 
 	for {
 		<-ticker.C
@@ -47,12 +49,12 @@ func main() {
 			inx2 -= 1
 		}
 
-		colorsBytes, err := json.Marshal(ColorSet{colors})
+		colorBytes, err := json.Marshal(ColorSet{colors})
 		if err != nil {
 			panic(err)
 		}
 
-		err = ioutil.WriteFile("/dev/leds/colors.json", colorsBytes, 0644)
+		err = ioutil.WriteFile(LEDSFILE, colorBytes, 0644)
 		if err != nil {
 			panic(err)
 		}

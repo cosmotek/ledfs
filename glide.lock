@@ -1,11 +1,12 @@
 hash: ad6d2eedc57b7314901d1d4e3f427eede240d3b94d65ba48c9e30325714cd30c
-updated: 2018-07-19T20:28:36.723825727-04:00
+updated: 2018-07-20T10:04:20.759410017-04:00
 imports:
 - name: github.com/hanwen/go-fuse
   version: 5690be47d614355a22931c129e1075c25a62e9ac
   subpackages:
   - fuse
   - fuse/nodefs
+  - fuse/pathfs
   - splice
 - name: github.com/jgarff/rpi_ws281x
   version: e4a05d6538c02bb9714f2efc6630f2bfdcf35bf6
@@ -13,4 +14,8 @@ imports:
   - golang/ws2811
 - name: github.com/rs/zerolog
   version: 77db4b4f350e31be66a57c332acb7721cf9ff9bb
+  subpackages:
+  - internal/cbor
+  - internal/json
+  - log
 testImports: []

@@ -1,6 +1,6 @@
-# Chateau Gateway Experiments
-
-## WS281x LEDs
+# LedFS
+> A daemon for driving WS281x LEDs (Neopixels) using a FUSE filesystem
+> on the Raspberry Pi
 
 #### Build setup
 
