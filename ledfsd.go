@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"os/signal"
 	"strconv"
 	"time"
 
@@ -141,9 +142,39 @@ func main() {
 	logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	defer ws2811.Fini()
 
-	err := ws2811.Init(DefaultOptions.GPIOPin, DefaultOptions.NumLEDs, DefaultOptions.Brightness)
+	err := ws2811.Init(int(DefaultOptions.GPIOPin), int(DefaultOptions.NumLEDs), int(DefaultOptions.Brightness))
 	if err != nil {
 		logger.Fatal().Err(err).Msg("failed to init leds")
+	}
+
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	go func() {
+		for {
+			<-c
+
+			// sig is a ^C, handle it
+			for i := uint32(0); i < DefaultOptions.NumLEDs; i++ {
+				ws2811.SetLed(int(i), 0x000000)
+			}
+
+			if err := ws2811.Render(); err != nil {
+				ws2811.Clear()
+				logger.Error().Err(err).Msg("failed to render led colors")
+			}
+
+			ws2811.Fini()
+			os.Exit(0)
+		}
+	}()
+
+	for i := uint32(0); i < DefaultOptions.NumLEDs; i++ {
+		ws2811.SetLed(int(i), 0x000000)
+	}
+
+	if err := ws2811.Render(); err != nil {
+		ws2811.Clear()
+		logger.Error().Err(err).Msg("failed to render led colors")
 	}
 
 	fs := &LedFs{
@@ -184,9 +215,18 @@ func main() {
 		logger.Debug().Interface("options", options).Msg("resetting led options")
 		ws2811.Fini()
 
-		err := ws2811.Init(options.GPIOPin, options.NumLEDs, options.Brightness)
+		err = ws2811.Init(int(options.GPIOPin), int(options.NumLEDs), int(options.Brightness))
 		if err != nil {
 			logger.Fatal().Err(err).Msg("failed to init leds")
+		}
+
+		for i := uint32(0); i < DefaultOptions.NumLEDs; i++ {
+			ws2811.SetLed(int(i), 0x000000)
+		}
+
+		if err := ws2811.Render(); err != nil {
+			ws2811.Clear()
+			logger.Error().Err(err).Msg("failed to render led colors")
 		}
 	})
 
