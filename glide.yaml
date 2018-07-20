@@ -8,3 +8,5 @@ import:
 - package: github.com/jgarff/rpi_ws281x
   subpackages:
   - golang/ws2811
+- package: github.com/rs/zerolog
+  version: ~1.8.0
