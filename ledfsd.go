@@ -16,7 +16,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
-	"gitlab.com/rucuriousyet/chateau-gateway/file"
+	"gitlab.com/rucuriousyet/ledfs/file"
 )
 
 type ColorSet struct {
