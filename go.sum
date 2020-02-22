@@ -1,0 +1,8 @@
+github.com/hanwen/go-fuse v0.0.0-20170609101909-5690be47d614 h1:757rta3DGvtCMtsI72I+5GHPTCTqcubSyR3g/Yan1dM=
+github.com/hanwen/go-fuse v0.0.0-20170609101909-5690be47d614/go.mod h1:4ZJ05v9yt5k/mcFkGvSPKJB5T8G/6nuumL63ZqlrPvI=
+github.com/jgarff/rpi_ws281x v0.0.0-20180320103349-e4a05d6538c0 h1:TafAX6ZwMpum6FMEHwyGMWaVAT8IHslDbH6z582tk3E=
+github.com/jgarff/rpi_ws281x v0.0.0-20180320103349-e4a05d6538c0/go.mod h1:xbXlgWZjA66nkwNqkT4ol2EqY7jL8v+1efK5ZnOT/MU=
+github.com/rs/zerolog v1.8.0 h1:Oglcb4i6h42uWacEjomB2MI8gfkwCwTMFaDY3+Vgj5k=
+github.com/rs/zerolog v1.8.0/go.mod h1:YbFCdg8HfsridGWAh22vktObvhZbQsZXe4/zB0OKkWU=
+gitlab.com/rucuriousyet/ledfs v0.0.0-20180920190101-c52f910de7c5 h1:3VxUT2z1VQlb/wZiUjd3EqfDjgDKKnN3VbwyL4UW+Fw=
+gitlab.com/rucuriousyet/ledfs v0.0.0-20180920190101-c52f910de7c5/go.mod h1:fQvd3HJPWCf/kw4zFl/bHx4wAHaan4Vkmkx4ORYeNko=

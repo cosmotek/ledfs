@@ -230,7 +230,7 @@ func main() {
 		}
 	})
 
-	server, conn, err := nodefs.MountRoot(flag.Arg(0), pathfs.NewPathNodeFs(fs, nil).Root(), nil)
+	server, _, err := nodefs.MountRoot(flag.Arg(0), pathfs.NewPathNodeFs(fs, nil).Root(), nil)
 	if err != nil {
 		logger.Fatal().Msg(fmt.Sprintf("Mount fail: %v\n", err))
 	}

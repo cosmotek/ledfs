@@ -6,9 +6,9 @@ import (
 	"time"
 )
 
-const NUMLEDS = 24
+const NUMLEDS = 18
 const LEDSFILE = "/dev/leds/colors.json"
-const TICKMILLIS = 25
+const TICKMILLIS = 24
 
 type ColorSet struct {
 	Values []string `json:"values"`
